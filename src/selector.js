@@ -29,11 +29,25 @@ var selectorTypeMatcher = function (selector) {
 
 var matchFunctionMaker = function (selector) {
   var selectorType = selectorTypeMatcher(selector);
-  var matchFunction;
+  var matchFunction
   if (selectorType === "id") {
+    matchFunction = function (el){
+      return el.id && el.id.toLowerCase() === selector.slice(1).toLowerCase();
+    }
   } else if (selectorType === "class") {
+    matchFunction = function (el){
+      return el.classList.contains(selector.slice(1));
+    }
   } else if (selectorType === "tag.class") {
+    const [tag, className] = selector.split('.')
+    matchFunction = function (el){
+      //const newStr = selector.slice(selector.indexOf('.')+1).toLowerCase()
+      return (el.tagName.toLowerCase() === tag && el.classList.contains(className))
+    }
   } else if (selectorType === "tag") {
+    matchFunction = function (el){
+      return el.tagName && el.tagName.toLowerCase() === selector.toLowerCase();
+    }
   }
   return matchFunction;
 };
